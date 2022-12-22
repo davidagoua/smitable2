@@ -1,0 +1,24 @@
+.filament-tables-container{
+    border-width: 0 !important;
+    box-shadow: 1px 1px 3px 3px gray;
+    border-radius: 0px !important;
+}
+.filament-tables-table > thead{
+    border-radius: 0px !important;
+    color: white !important;
+}
+.filament-tables-header-cell {
+    color: white !important;
+}
+.filament-button{
+    border-radius: 0px!important;
+}
+.filament-modal-window{
+    border-radius: 0px !important;
+}
+.filament-tables-cell{
+    padding: 1px 1px !important;
+}
+.filament-forms-text-input-component > input{
+    border-radius: 0px !important;
+}
