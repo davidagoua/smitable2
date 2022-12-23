@@ -15,4 +15,14 @@ class HomeController extends Controller
     {
         return view('home.patient_form');
     }
+
+    public function search()
+    {
+        return view('home.search');
+    }
+
+    public function patient_consultes()
+    {
+        return view('home.patient_consultes');
+    }
 }

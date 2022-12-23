@@ -18,7 +18,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unsignedBigInteger('patient_id');
-            $table->dateTime('start')->nullable();
+            $table->dateTime('start')->default(now());
             $table->dateTime('outed')->nullable();
             $table->unsignedBigInteger('service_id')->nullable();
             $table->longText('description')->nullable();

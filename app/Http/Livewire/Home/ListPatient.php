@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Home;
 
+use App\Models\Appointement;
 use App\Models\Service;
 use App\Models\Patient;
 use Filament\Tables\Actions\Action;
@@ -29,7 +30,7 @@ class ListPatient extends Component implements HasTable
 
     public function getTableQuery()
     {
-        return Patient::query();
+        return Appointement::query();
     }
 
     public function getTableHeaderActions()

@@ -5,7 +5,8 @@
 <div>
     <x-page-header :title="'Ajouter un nouveau patient'"/>
 
-    <livewire:home.add-patient/>
+
+        <livewire:home.add-patient/>
 
 </div>
 @endsection

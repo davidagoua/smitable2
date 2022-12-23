@@ -2,7 +2,9 @@
 
 namespace App\Http\Livewire\Home;
 
+use App\Models\Appointement;
 use App\Models\Patient;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
@@ -15,15 +17,28 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\HtmlString;
 use Livewire\Component;
 
 class AddPatient extends Component implements HasForms
 {
     use InteractsWithForms;
+    public $data = [];
 
     public function render()
     {
         return view('livewire.home.add-patient');
+    }
+
+    public function submit()
+    {
+        $patient = Patient::create($this->form->getState());
+        $appointement = new Appointement($this->form->getState());
+        $appointement->patient_id = $patient->id;
+
+        Filament::notify('success', "Rendez-vous enregistré");
+        return redirect()->route('home.patient_list');
     }
 
     public function getFormSchema()
@@ -52,35 +67,7 @@ class AddPatient extends Component implements HasForms
                               $patient = Patient::find($value);
                               return static::getCleanOptionString($patient);
                           })
-                          ->afterStateUpdated(function(callable $set, $state){
-                              if($state != null){
-                                  $patient = Patient::find($state);
-                                  $set('nom', $patient->nom);
-                                  $set('prenoms', $patient->prenoms);
-                                  $set('date_naissance', $patient->date_naissance);
-                                  $set('lieu_naissance', $patient->lieu_naissance);
-                                  $set('mobile', $patient->mobile);
-                                  $set('situation_matrimoniale', $patient->situation_matrimoniale);
-                                  $set('domicile', $patient->domicile);
-                                  $set('email', $patient->email);
-                                  $set('sexe', $patient->sexe);
-                                  $set('nationalite', $patient->nationalite);
-                                  $set('scolarisation', $patient->scolarisation);
-                                  $set('profession', $patient->profession);
-                              }else{
-                                  $set('nom', null);
-                                  $set('prenoms', null);
-                                  $set('date_naissance', null);
-                                  $set('lieu_naissance', null);
-                                  $set('mobile', null);
-                                  $set('domicile', null);
-                                  $set('email', null);
-                                  $set('sexe', null);
-                                  $set('nationalite', null);
-                                  $set('scolarisation', null);
-                                  $set('profession', null);
-                              }
-                          })->reactive()
+                          ->afterStateUpdated(fn ($set, $get) => $this->fillFromCodePatient($set, $get))->reactive()
                   ]),
                   Section::make('Enregistrer')->schema([
                       Grid::make(['default'=>2])->schema([
@@ -91,11 +78,11 @@ class AddPatient extends Component implements HasForms
                               'onKeyUp'=>'this.value = this.value.toUpperCase()'
                           ])->required(),
                           Radio::make('sexe')->options([
-                              'H'=>'Homme',
-                              'F'=>'Femme'
+                              'Homme'=>'Homme',
+                              'Femme'=>'Femme'
                           ])->inline()->required(),
 
-                          Select::make('situation_matrimoniale')->options(['Marie','Celibataire','Autre']),
+                          Select::make('situation_matrimoniale')->options(['Marie'=>'Marie','Celibataire'=>'Celibataire','Autres'=>'Autres']),
                           DatePicker::make('date_naissance'),
                           TextInput::make('lieu_naissance')->extraAttributes([
                               'onKeyUp'=>'this.value = this.value.toUpperCase()'
@@ -107,9 +94,14 @@ class AddPatient extends Component implements HasForms
                               'onKeyUp'=>'this.value = this.value.toUpperCase()'
                           ])->placeholder('Ville, quartier, rue'),
 
-                          TextInput::make('profession')->extraAttributes([
-                              'onKeyUp'=>'this.value = this.value.toUpperCase()'
-                          ]),
+                          Select::make('profession')->options([
+                              'Armée'=>'Armée',
+                              'Medicale'=>'Medicale',
+                              'Militaire'=>'Militaire',
+                              'Justice'=>'Justice',
+                              'Adminitative'=>'Adminitative',
+                              'Privé'=>'Privé',
+                          ])->label('Corps'),
 
                           Select::make('nationalite')
                               ->searchable()
@@ -119,8 +111,8 @@ class AddPatient extends Component implements HasForms
                       ])
                   ])
               ]),
-              Wizard\Step::make('Sante')
-                  ->statePath('motif')
+              Wizard\Step::make('Motifs')
+                  ->statePath('motifs')
                   ->schema([
                       Radio::make('mode_in')->options(['Urgence','Consultation','Transfert'])->inline()->label("Mode d'entrée"),
                       Repeater::make('motif_consultation')->schema([
@@ -151,7 +143,56 @@ class AddPatient extends Component implements HasForms
                   DateTimePicker::make('start')->label('Date du RDV')->default(now())
               ]),
 
-          ])
+          ])->submitAction(new HtmlString('<button class="filament-button" type="submit">Enregistrer</button>'))
         ];
+    }
+
+    public function fillFromCodePatient(callable $set, $state){
+        dd($state);
+        if($state != null){
+            $patient = Patient::find($state);
+
+            $set('data.nom', $patient->nom);
+            $set('data.prenoms', $patient->prenoms);
+            $set('data.date_naissance', $patient->date_naissance);
+            $set('data.lieu_naissance', $patient->lieu_naissance);
+            $set('data.mobile', $patient->mobile);
+            $set('data.situation_matrimoniale', $patient->situation_matrimoniale);
+            $set('data.domicile', $patient->domicile);
+            $set('data.email', $patient->email);
+            $set('data.sexe', $patient->sexe);
+            $set('data.nationalite', $patient->nationalite);
+            $set('data.scolarisation', $patient->scolarisation);
+            $set('data.profession', $patient->profession);
+        }else{
+            $set('data.nom', null);
+            $set('data.prenoms', null);
+            $set('data.date_naissance', null);
+            $set('data.lieu_naissance', null);
+            $set('data.mobile', null);
+            $set('data.domicile', null);
+            $set('data.email', null);
+            $set('data.sexe', null);
+            $set('data.nationalite', null);
+            $set('data.scolarisation', null);
+            $set('data.profession', null);
+        }
+    }
+
+    public function getFormStatePath() : string
+    {
+        return 'data';
+    }
+
+    public static function getCleanOptionString(Model $model): string
+    {
+        return
+            view('filament.search_patient_view')
+                ->with('name', $model?->name)
+                ->with('email', $model?->email)
+                ->with('code_patient', $model?->code_patient)
+                ->with('avatar', $model?->avatar)
+                ->render()
+        ;
     }
 }

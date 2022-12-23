@@ -46,11 +46,12 @@
 
                 <li class="menu-title"><b>Général</b></li>
                 <x-menu-link link="/" :label="'Tableau de bord'"  />
-                <x-menu-link link="/search" :label="'Recherche'"   icon=""/>
+                <x-menu-link :link="route('home.search')" :label="'Recherche'"   icon=""/>
 
                 <li class="menu-title"><b>Acceuil</b></li>
                 <x-menu-link :link="route('home.patient_add')" label="Nouveau patient"  icon=""/>
                 <x-menu-link :link="route('home.patient_list')" badge="4" label="Patient en attentes" icon="" />
+                <x-menu-link :link="route('home.patient_consultes')" badge="4" label="Patient consultés" icon="" />
 
                 <li class="menu-title"><b>Services</b></li>
 
@@ -69,6 +70,8 @@
                 <x-menu-link :link="route('analyse.liste')" label="Catalogues" />
 
                 <li class="menu-title"><b>Pharmacie</b></li>
+                <x-menu-link :link="route('pharmacie.list_ordonance')" label="Ordonances" />
+                <x-menu-link :link="route('pharmacie.stock')" label="Stock Medicament" />
             </ul>
 
         </div>

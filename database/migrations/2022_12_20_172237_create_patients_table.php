@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('code_patient')->unique();
+            $table->string('index')->unique();
             $table->integer('etat')->default(0);
             $table->string('nom')->nullable();
             $table->string('prenoms')->nullable();
@@ -29,7 +30,7 @@ return new class extends Migration
             $table->string('situation_matrimoniale')->nullable();
             $table->date('date_naissance')->nullable();
             $table->string('lieu_naissance')->nullable();
-            $table->string('scolarisation')->   nullable();
+            $table->string('scolarisation')->nullable();
             $table->boolean('actif')->default(false);
             $table->json('data')->nullable();
         });

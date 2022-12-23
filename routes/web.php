@@ -25,7 +25,9 @@ Route::controller(\App\Http\Controllers\HomeController::class)
     ->name('home.')
     ->group(function(){
     Route::get('/patients', 'patient_list')->name('patient_list');
+    Route::get('/patients-consultes', 'patient_consultes')->name('patient_consultes');
     Route::get('ajouter/', 'patient_add')->name('patient_add');
+    Route::get('recherche/', 'search')->name('search');
 });
 
 Route::controller(\App\Http\Controllers\ServiceController::class)
@@ -51,4 +53,12 @@ Route::controller(\App\Http\Controllers\AnalyseController::class)
     ->group(function(){
         Route::get('/', 'analyse_appointement_list')->name('analyse_appointement_list');
         Route::get('liste/', 'analyse_list')->name('liste');
+    });
+
+Route::controller(\App\Http\Controllers\PharmacieController::class)
+    ->name('pharmacie.')
+    ->prefix('pharmacie/')
+    ->group(function(){
+       Route::get('ordonances/', 'list_ordonance')->name('list_ordonance');
+       Route::get('stock/', 'stock')->name('stock');
     });

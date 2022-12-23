@@ -17,9 +17,11 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
 
-            $table->unsignedBigInteger('type_medicament_id')->nullable();
+            $table->unsignedBigInteger('type_medicament_id')
+
+                ->nullable();
             $table->string('nom');
-            $table->longText('Description');
+            $table->longText('description');
             $table->unsignedBigInteger('stock')->default(0);
             $table->unsignedBigInteger('prix')->default(0);
             $table->string('numero')->nullable();
