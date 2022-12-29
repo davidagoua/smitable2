@@ -18,7 +18,7 @@ class ServiceSeeder extends Seeder
         $services = ["Général","Tuberculose",'VIH/SIDA','Urgence','COVID-19','Lèpre'];
 
         foreach ($services as $s){
-            DB::table('service')->insert(['nom'=>$s, 'label'=>'fe-aperture']);
+            DB::table('services')->insert(['nom'=>$s, 'label'=>'fe-aperture']);
         }
     }
 }
