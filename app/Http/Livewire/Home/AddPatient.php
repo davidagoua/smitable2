@@ -2,8 +2,10 @@
 
 namespace App\Http\Livewire\Home;
 
+use App\Events\PatientRegistered;
 use App\Models\Appointement;
 use App\Models\Patient;
+use App\Models\Service;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
@@ -18,13 +20,23 @@ use Filament\Forms\Components\Wizard;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\HtmlString;
 use Livewire\Component;
 
 class AddPatient extends Component implements HasForms
 {
     use InteractsWithForms;
-    public $data = [];
+    public $data = [
+        'patient_id'=>null,
+        'date_naissance'=>null,
+        'nationalite'=>null,
+        'rdv'=> [
+            'service_id'=>null,
+            'start'=>null,
+        ],
+    ];
+    public $service_id, $start;
 
     public function render()
     {
@@ -33,10 +45,23 @@ class AddPatient extends Component implements HasForms
 
     public function submit()
     {
-        $patient = Patient::create($this->form->getState());
-        $appointement = new Appointement($this->form->getState());
-        $appointement->patient_id = $patient->id;
+        $entries = $this->form->getState();
+        $patient = Patient::firstOrCreate(['id'=> $entries['patient_id']], $entries);
 
+        // register
+        $id = DB::table('appointements')->insertGetId([
+            'patient_id'=>$patient->id,
+            'service_id'=> $entries['rdv']['service_id'],
+            //'motifs'=> $entries['motifs'],
+            'start'=> $entries['rdv']['start'] ?? now()
+        ]);
+
+        $appointement = Appointement::find($id);
+
+        //dd($appointement);
+        $event = new PatientRegistered($patient, $appointement)  ;
+        event($event);
+        auth()->user()->notify();
         Filament::notify('success', "Rendez-vous enregistré");
         return redirect()->route('home.patient_list');
     }
@@ -48,9 +73,7 @@ class AddPatient extends Component implements HasForms
               Wizard\Step::make('Patient')->schema([
                   Section::make('Rechercher')->schema([
                       Select::make('patient_id')
-                          ->searchable()->label("Code du patient")->extraAttributes([
-                              'onKeyUp'=>'this.value = this.value.toUpperCase()'
-                          ])->allowHtml()
+                          ->searchable()->label("Code du patient")->allowHtml()
                           ->getSearchResultsUsing(function (string $search) {
                               $patients = Patient::where('code_patient', 'like', "%{$search}%")
                                   ->orWhere('nom', 'like', "%{$search}%")
@@ -67,39 +90,32 @@ class AddPatient extends Component implements HasForms
                               $patient = Patient::find($value);
                               return static::getCleanOptionString($patient);
                           })
-                          ->afterStateUpdated(fn ($set, $get) => $this->fillFromCodePatient($set, $get))->reactive()
+                          ->afterStateUpdated(fn ($state, $set, $get) => $this->fillFromCodePatient($state, $set, $get))->reactive()
                   ]),
+
                   Section::make('Enregistrer')->schema([
                       Grid::make(['default'=>2])->schema([
-                          TextInput::make('nom')->extraAttributes([
-                              'onKeyUp'=>'this.value = this.value.toUpperCase()'
-                          ])->required(),
-                          TextInput::make('prenoms')->extraAttributes([
-                              'onKeyUp'=>'this.value = this.value.toUpperCase()'
-                          ])->required(),
+                          TextInput::make('nom')->required(),
+                          TextInput::make('prenoms')->required(),
                           Radio::make('sexe')->options([
                               'Homme'=>'Homme',
                               'Femme'=>'Femme'
                           ])->inline()->required(),
 
-                          Select::make('situation_matrimoniale')->options(['Marie'=>'Marie','Celibataire'=>'Celibataire','Autres'=>'Autres']),
-                          DatePicker::make('date_naissance'),
-                          TextInput::make('lieu_naissance')->extraAttributes([
-                              'onKeyUp'=>'this.value = this.value.toUpperCase()'
-                          ])->required(),
-
+                          Select::make('situation_matrimoniale')
+                              ->required()
+                              ->options(['Marie'=>'Marie','Celibataire'=>'Celibataire','Autres'=>'Autres']),
+                          DatePicker::make('date_naissance')->required()->label("Date de naissance"),
+                          TextInput::make('lieu_naissance')->required()->label("Lieu de naissance"),
                           TextInput::make('email')->type('email'),
                           TextInput::make('mobile')->tel()->prefix('+225'),
-                          TextInput::make('domicile')->extraAttributes([
-                              'onKeyUp'=>'this.value = this.value.toUpperCase()'
-                          ])->placeholder('Ville, quartier, rue'),
-
+                          TextInput::make('domicile')->placeholder('Ville, commune, quartier'),
                           Select::make('profession')->options([
                               'Armée'=>'Armée',
                               'Medicale'=>'Medicale',
                               'Militaire'=>'Militaire',
                               'Justice'=>'Justice',
-                              'Adminitative'=>'Adminitative',
+                              'Adminitrative'=>'Adminitrative',
                               'Privé'=>'Privé',
                           ])->label('Corps'),
 
@@ -107,38 +123,30 @@ class AddPatient extends Component implements HasForms
                               ->searchable()
                               ->options(['IVOIRIEN','MALIEN','GHANEEN','AUTRES']),
 
-                          Checkbox::make('scolarisation')
+                          Checkbox::make('scolarisation')->inline(false)
                       ])
                   ])
               ]),
               Wizard\Step::make('Motifs')
                   ->statePath('motifs')
                   ->schema([
-                      Radio::make('mode_in')->options(['Urgence','Consultation','Transfert'])->inline()->label("Mode d'entrée"),
+                      Radio::make('mode_in')->options(['Urgence'=>'Urgence','Consultation'=>'Consultation','Transfert'=>'Transfert'])->inline()->label("Mode d'entrée"),
                       Repeater::make('motif_consultation')->schema([
-                          TextInput::make('motif')->extraAttributes([
-                              'onKeyUp'=>'this.value = this.value.toUpperCase()'
-                          ])
+                          TextInput::make('motif')
                       ]),
                       Repeater::make('antecedant')->schema([
-                          Select::make('type_antecedant')->options(['Medicaux'=>'Medicaux','Churigicaux',
+                          Select::make('type_antecedant')->options(['Medicaux'=>'Medicaux','Churigicaux'=>'Churigicaux',
                               'Vénérologie'=>'Vénérologie','Mode de vie'=>'Mode de vie',
                               'Gyneco-obstétrique'=>'Gyneco-obstétrique','Autres'=>'Autres']),
-                          TextInput::make('motif')->extraAttributes([
-                              'onKeyUp'=>'this.value = this.value.toUpperCase()'
-                          ])
+                          TextInput::make('motif')
                       ])->columns(['default'=>2]),
                   ]),
-              Wizard\Step::make('Rendez-vous')->schema([
+              Wizard\Step::make('Rendez-vous')
+                  ->statePath('rdv')
+                  ->schema([
                   Select::make('service_id')->label('service')
-                      ->options([
-                          1=>"Consultation Générale",
-                          2=>'COVID-19',
-                          3=>'Lèpre',
-                          4=>'SIDA',
-                          5=>'Tuberculose',
-                          6=>'Urgence'
-                      ])
+                      ->required()
+                      ->options(Service::all('id','nom')->pluck('nom','id'))
                       ->searchable(),
                   DateTimePicker::make('start')->label('Date du RDV')->default(now())
               ]),
@@ -147,35 +155,32 @@ class AddPatient extends Component implements HasForms
         ];
     }
 
-    public function fillFromCodePatient(callable $set, $state){
-        dd($state);
+    public function fillFromCodePatient($state, callable $set, $get){
         if($state != null){
             $patient = Patient::find($state);
+            $this->data['nom'] = $patient->nom;
+            $this->data['prenoms'] = $patient->prenoms;
+            $this->data['date_naissance'] = $patient->date_naissance;
+            $this->data['lieu_naissance'] = $patient->lieu_naissance;
+            $this->data['email'] = $patient->email;
+            $this->data['situation_matrimoniale'] = $patient->situation_matrimoniale;
+            $this->data['domicile'] = $patient->domicile;
+            $this->data['sexe'] = $patient->sexe;
+            $this->data['nationalite'] = $patient->nationalite;
+            $this->data['profession'] = $patient->profession;
+            $this->data['scolarisation'] = $patient->scolarisation;
+            $this->data['mobile'] = $patient->mobile;
 
-            $set('data.nom', $patient->nom);
-            $set('data.prenoms', $patient->prenoms);
-            $set('data.date_naissance', $patient->date_naissance);
-            $set('data.lieu_naissance', $patient->lieu_naissance);
-            $set('data.mobile', $patient->mobile);
-            $set('data.situation_matrimoniale', $patient->situation_matrimoniale);
-            $set('data.domicile', $patient->domicile);
-            $set('data.email', $patient->email);
-            $set('data.sexe', $patient->sexe);
-            $set('data.nationalite', $patient->nationalite);
-            $set('data.scolarisation', $patient->scolarisation);
-            $set('data.profession', $patient->profession);
         }else{
-            $set('data.nom', null);
-            $set('data.prenoms', null);
-            $set('data.date_naissance', null);
-            $set('data.lieu_naissance', null);
-            $set('data.mobile', null);
-            $set('data.domicile', null);
-            $set('data.email', null);
-            $set('data.sexe', null);
-            $set('data.nationalite', null);
-            $set('data.scolarisation', null);
-            $set('data.profession', null);
+            $this->data = [
+                'patient_id'=>null,
+                'date_naissance'=>null,
+                'nationalite'=>null,
+                'rdv'=> [
+                    'service_id'=>null,
+                    'start'=>null,
+                ],
+            ];
         }
     }
 
@@ -188,7 +193,7 @@ class AddPatient extends Component implements HasForms
     {
         return
             view('filament.search_patient_view')
-                ->with('name', $model?->name)
+                ->with('name', $model?->fullName)
                 ->with('email', $model?->email)
                 ->with('code_patient', $model?->code_patient)
                 ->with('avatar', $model?->avatar)

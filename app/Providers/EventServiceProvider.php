@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Events\PatientRegistered;
+use App\Listeners\SendNewPatientNotification;
+use App\Notifications\NewPatientNotification;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -27,7 +30,10 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Event::listen(
+            PatientRegistered::class,
+            [NewPatientNotification::class]
+        );
     }
 
     /**

@@ -101,17 +101,19 @@
                 </div>
             </li>
 
-            <li class="dropdown notification-list topbar-dropdown">
-                <a class="nav-link dropdown-toggle nav-user me-0 waves-effect waves-light" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+            <li class="dropdown flex notification-list topbar-dropdown">
+                <a style="display: flex; align-items: center" class="nav-link flex dropdown-toggle nav-user me-0 waves-effect waves-light" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
                     <img src="/assets/images/users/user-1.jpg" alt="user-image" class="rounded-circle">
                     <span class="pro-user-name ms-1">
-                                    Geneva <i class="mdi mdi-chevron-down"></i>
+                            @auth
+                                    {{ auth()->user()->name }} @else Guest @endauth<i class="mdi mdi-chevron-down"></i>
                                 </span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end profile-dropdown ">
                     <!-- item-->
                     <div class="dropdown-header noti-title">
-                        <h6 class="text-overflow m-0">Welcome !</h6>
+                        <h6 class="text-overflow m-0">@auth
+                                {{ auth()->user()->name }} @else Guest @endauth</h6>
                     </div>
 
                     <!-- item-->

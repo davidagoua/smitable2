@@ -11,6 +11,7 @@ class Patient extends Model
 {
     use HasFactory;
 
+
     protected $fillable = [
         'nom','prenoms','sexe','nationalite','profession','email','mobile','domicile','situation_matrimoniale',
         'date_naissance','scolarisation','data','lieu_naissance'
@@ -35,15 +36,15 @@ class Patient extends Model
     {
         parent::boot();
         self::creating(function($model){
-            $model->code_patient = 'SMT-'. Str::random(6) .'-CI';
-            $model->index = Str::remove(' ',$model->nom.''.$model->prenoms.''.$model->date_naissance.''.$model->mobile);
+            $model->code_patient = 'SMT-'. strtoupper(Str::random(6)) .'-CI';
+            //$model->index = Str::remove(' ',$model->nom.''.$model->prenoms.''.$model->date_naissance.''.$model->mobile);
         });
 
         static::updating(function($model){
             if ($model->code_patient === ''){
-                $model->code_patient = 'SMT-'. Str::random(6) .'-CI';
+                $model->code_patient = 'SMT-'. strtoupper(Str::random(6)) .'-CI';
             }
-            $model->index = Str::remove(' ',$model->nom.''.$model->prenoms.''.$model->date_naissance.''.$model->mobile);
+            //$model->index = Str::remove(' ',$model->nom.''.$model->prenoms.''.$model->date_naissance.''.$model->mobile);
         });
     }
 }

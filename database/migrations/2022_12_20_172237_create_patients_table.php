@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('code_patient')->unique();
-            $table->string('index')->unique();
+            $table->string('index')->nullable();
             $table->integer('etat')->default(0);
             $table->string('nom')->nullable();
             $table->string('prenoms')->nullable();
