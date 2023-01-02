@@ -64,8 +64,9 @@
                 <x-menu-link :link="route('hospi.chambre')" label="Chambres" />
 
                 <li class="menu-title"><b>Analyse</b></li>
+                <x-menu-link :link="route('analyse.demandes')" label="Analyses demandées" />
                 <x-menu-link :link="route('analyse.analyse_appointement_list')" label="Analyses en cours" />
-                <x-menu-link :link="route('analyse.analyse_appointement_list')" label="Analyses terminées" />
+                <x-menu-link :link="route('analyse.termines')" label="Analyses terminées" />
                 <x-menu-link :link="route('analyse.liste')" label="Catalogues" />
 
                 <li class="menu-title"><b>Pharmacie</b></li>

@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('analyse_appointements', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-
+            $table->tinyInteger('status')->default(0);
             $table->unsignedBigInteger('analyse_id');
             $table->unsignedBigInteger('appointement_id');
         });

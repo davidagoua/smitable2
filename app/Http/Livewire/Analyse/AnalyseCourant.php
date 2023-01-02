@@ -3,7 +3,9 @@
 namespace App\Http\Livewire\Analyse;
 
 use App\Models\AnalyseAppointement;
+use App\Models\AnalyseAppointementStatus;
 use App\Models\Service;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Livewire\Component;
@@ -28,6 +30,18 @@ class AnalyseCourant extends Component implements HasTable
 
     public function getTableQuery()
     {
-        return AnalyseAppointement::query()->with(['analyse','appointement']);
+        return AnalyseAppointement::query()
+            ->where('status', AnalyseAppointementStatus::ENCOUR)
+            ->with(['analyse','appointement']);
+    }
+
+    public function getTableColumns()
+    {
+        return [
+          TextColumn::make('appointement.patient.nom')->label("Nom"),
+          TextColumn::make('appointement.patient.prenoms')->label("Prenoms"),
+          TextColumn::make('analyse.nom')->label("Analyse"),
+          TextColumn::make('created_at')->label("Date de demande"),
+        ];
     }
 }

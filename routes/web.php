@@ -53,6 +53,8 @@ Route::controller(\App\Http\Controllers\AnalyseController::class)
     ->group(function(){
         Route::get('/', 'analyse_appointement_list')->name('analyse_appointement_list');
         Route::get('liste/', 'analyse_list')->name('liste');
+        Route::get('demandes/', 'analyse_demandes')->name('demandes');
+        Route::get('terminees/', 'analyse_termines')->name('termines');
     });
 
 Route::controller(\App\Http\Controllers\PharmacieController::class)

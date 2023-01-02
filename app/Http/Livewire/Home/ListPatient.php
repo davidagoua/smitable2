@@ -65,7 +65,7 @@ class ListPatient extends Component implements HasTable
     public function getTableActions()
     {
         return [
-            Action::make('consulter')
+            Action::make('Constantes')
                 ->button()
                 ->action(function($record, $data){
                     $consultation = Consultation::create([...$data, 'appointement_id'=>$record->id]);
