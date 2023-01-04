@@ -5,11 +5,11 @@
     <x-page-header :title="$title"/>
 
     @if($component == 'pharmacie.stock')
-
     <livewire:pharmacie.stock />
     @elseif($component == 'pharmacie.vente')
     <livewire:pharmacie.vente />
-        @endif
+
+    @endif
 </div>
 
 @endsection

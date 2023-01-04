@@ -22,6 +22,7 @@ class Patient extends Model
         return $this->hasMany(Appointment::class);
     }
 
+
     public function getFullNameAttribute() : string
     {
         return $this->nom.' '.$this->prenoms;

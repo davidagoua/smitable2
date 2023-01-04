@@ -5,6 +5,8 @@ namespace App\Http\Livewire\Analyse;
 use App\Models\AnalyseAppointement;
 use App\Models\AnalyseAppointementStatus;
 use App\Models\Service;
+use Filament\Forms\Components\Toggle;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
@@ -42,6 +44,20 @@ class AnalyseCourant extends Component implements HasTable
           TextColumn::make('appointement.patient.prenoms')->label("Prenoms"),
           TextColumn::make('analyse.nom')->label("Analyse"),
           TextColumn::make('created_at')->label("Date de demande"),
+        ];
+    }
+
+    public function getTableActions()
+    {
+        return [
+            Action::make('Resultat')->action(function($record, $data){
+
+            })
+                ->color('secondary')
+                ->button()
+            ->form([
+                Toggle::make('resultat')->label("Positive"),
+            ])
         ];
     }
 }

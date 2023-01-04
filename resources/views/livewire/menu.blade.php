@@ -50,7 +50,7 @@
 
                 <li class="menu-title"><b>Acceuil</b></li>
                 <x-menu-link :link="route('home.patient_add')" label="Nouveau patient"  icon=""/>
-                <x-menu-link :link="route('home.patient_list')" badge="4" label="Patient en attentes" icon="" />
+                <x-menu-link :link="route('home.patient_list')" label="Patient en attentes" icon="" />
 
                 <li class="menu-title"><b>Services</b></li>
 

@@ -28,6 +28,7 @@ class AnalyseDemandes extends Component implements HasTable
     public function getTableColumns()
     {
         return [
+            TextColumn::make('appointement.patient.code_patient')->label("Code patient"),
             TextColumn::make('appointement.patient.nom')->label("Nom"),
             TextColumn::make('appointement.patient.prenoms')->label("Prenoms"),
             TextColumn::make('analyse.nom')->label("Analyse"),
@@ -39,6 +40,11 @@ class AnalyseDemandes extends Component implements HasTable
     {
         return [
             Action::make('accepter')->label("Accepter")->button()
+                ->requiresConfirmation()
+                ->action(fn($record) => $record->update(['status' => AnalyseAppointementStatus::ENCOUR])),
+            Action::make('annuler')->label("Annuler")
+                ->color('danger')
+                ->button()
         ];
     }
 }

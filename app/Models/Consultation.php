@@ -20,4 +20,9 @@ class Consultation extends Model
     {
         return $this->belongsTo(Appointement::class);
     }
+
+    public function getImcAttribute()
+    {
+        return $this->poids / ($this->taille/100)**2;
+    }
 }

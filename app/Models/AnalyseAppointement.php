@@ -20,7 +20,7 @@ class AnalyseAppointement extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'analyse_id','appintement_id'
+        'analyse_id','appintement_id','status'
     ];
 
     public function analyse(): BelongsTo

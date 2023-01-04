@@ -20,6 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('appointement_id');
             $table->unsignedBigInteger('chambre_lit_id');
             $table->date('date_debut')->default(now());
+            $table->unsignedTinyInteger('state')->default(0);
             $table->date('date_fin')->default(now()->addDay());
         });
     }

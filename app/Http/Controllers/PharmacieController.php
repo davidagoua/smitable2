@@ -9,7 +9,7 @@ class PharmacieController extends Controller
     public function list_ordonance()
     {
         return view('pharmacie.stock', [
-            'component'=>'pharmacie.ordonance',
+            'component'=>'pharmacie.vente',
             'title'=>'Liste des ordonances'
         ]);
     }

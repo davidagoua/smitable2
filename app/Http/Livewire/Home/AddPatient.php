@@ -58,10 +58,9 @@ class AddPatient extends Component implements HasForms
 
         $appointement = Appointement::find($id);
 
-        //dd($appointement);
         $event = new PatientRegistered($patient, $appointement)  ;
-        event($event);
-        auth()->user()->notify();
+        //event($event);
+        //auth()->user()->notify();
         Filament::notify('success', "Rendez-vous enregistré");
         return redirect()->route('home.patient_list');
     }

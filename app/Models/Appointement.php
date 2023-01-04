@@ -39,7 +39,7 @@ class Appointement extends Model
 
     public function consultation(): Consultation
     {
-        return $this->consultations()->get()->last();
+        return $this->consultations()->get()->last() ?? new Consultation();
     }
 
     public function getAgeAttribute()
