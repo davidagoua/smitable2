@@ -20,6 +20,8 @@ return new class extends Migration
             $table->unsignedBigInteger('ordonance_id');
             $table->unsignedBigInteger('medicament_id');
             $table->string('frequence')->nullable();
+            $table->unsignedInteger('quantite')->nullable();
+            $table->unsignedInteger('prix')->nullable();
             $table->date('solded_at')->nullable();
         });
     }

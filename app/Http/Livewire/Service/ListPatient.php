@@ -129,20 +129,25 @@ class ListPatient extends Component implements HasTable
                         $record->outed = now();
                     } else {
                         foreach ($data['analyses'] as $analyse) {
-                            DB::table('analyse_appointements')->insert([
-                                'analyse_id' => $analyse['id'],
-                                'appointement_id' => $record->id
-                            ]);
+                            if( $analyse['id'] != null){
+                                DB::table('analyse_appointements')->insert([
+                                    'analyse_id' => $analyse['id'],
+                                    'appointement_id' => $record->id
+                                ]);
+                            }
                         }
                     }
 
                     if (count($data['ordonances']) >= 1) {
                         $ordonance_id = DB::table('ordonances')->insertGetId(['appointement_id' => $record->id]);
                         foreach ($data['ordonances'] as $medicament) {
+                            $medicament = Medicament::find($medicament['id']);
                             DB::table('ligne_ordonances')->insert([
                                 'ordonance_id' => $ordonance_id,
                                 'medicament_id' => $medicament['id'],
-                                'frequence' => $medicament['frequence']
+                                'frequence' => $medicament['frequence'],
+                                'quantite' => 1,
+                                'prix'=> $medicament->prix,
                             ]);
                         }
                     }
