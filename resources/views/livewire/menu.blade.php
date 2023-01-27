@@ -45,12 +45,12 @@
             <ul id="side-menu">
 
                 <li class="menu-title"><b>Général</b></li>
-                <x-menu-link link="/" :label="'Tableau de bord'"  />
-                <x-menu-link :link="route('home.search')" :label="'Recherche'"   icon=""/>
+                <x-menu-link link="/" label="Tableau de bord" icon="icon-home pr-1"  />
+                <x-menu-link :link="route('home.search')" label="Recherche"   icon="icon-magnifier pr-1"/>
 
                 <li class="menu-title"><b>Acceuil</b></li>
-                <x-menu-link :link="route('home.patient_add')" label="Nouveau patient"  icon=""/>
-                <x-menu-link :link="route('home.patient_list')" label="Patient en attentes" icon="" />
+                <x-menu-link :link="route('home.patient_add')" label="Nouveau patient"  icon="icon-user-follow pr-1"/>
+                <x-menu-link :link="route('home.patient_list')" label="Patient en attentes" icon="icon-people pr-1" />
 
                 <li class="menu-title"><b>Services</b></li>
 
@@ -60,18 +60,18 @@
 
                 <li class="menu-title"><b>Hospitalisation</b></li>
 
-                <x-menu-link :link="route('hospi.index')" label="Reservations" />
+                <x-menu-link :link="route('hospi.index')" label="Reservations" icon="icon-calender pr-1" />
                 <x-menu-link :link="route('hospi.chambre')" label="Chambres" />
 
                 <li class="menu-title"><b>Analyse</b></li>
-                <x-menu-link :link="route('analyse.demandes')" label="Analyses demandées" />
-                <x-menu-link :link="route('analyse.analyse_appointement_list')" label="Analyses en cours" />
-                <x-menu-link :link="route('analyse.termines')" label="Analyses terminées" />
-                <x-menu-link :link="route('analyse.liste')" label="Catalogues" />
+                <x-menu-link :link="route('analyse.demandes')" label="Analyses demandées" icon="pr-1 icon-doc" />
+                <x-menu-link :link="route('analyse.analyse_appointement_list')" label="Analyses en cours" icon="pr-1 icon-doc" />
+                <x-menu-link :link="route('analyse.termines')" label="Analyses terminées" icon="pr-1 icon-doc" />
+                <x-menu-link :link="route('analyse.liste')" label="Catalogues" icon="pr-1 icon-folder-alt" />
 
                 <li class="menu-title"><b>Pharmacie</b></li>
-                <x-menu-link :link="route('pharmacie.list_ordonance')" label="Ordonances" />
-                <x-menu-link :link="route('pharmacie.stock')" label="Stock Medicament" />
+                <x-menu-link :link="route('pharmacie.list_ordonance')" label="Ordonances" icon="pr-1 icon-notebook" />
+                <x-menu-link :link="route('pharmacie.stock')" label="Stock Medicament" icon="pr-1 icon-layers" />
             </ul>
 
         </div>

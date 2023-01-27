@@ -13,54 +13,69 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('base');
-});
+Route::any("/login",[
+    \App\Http\Controllers\AuthController::class,
+    "login"
+])->name("login");
 
-Route::get('/test', function(){
-    return view('test');
-});
-
-Route::controller(\App\Http\Controllers\HomeController::class)
-    ->name('home.')
+Route::middleware('auth')
     ->group(function(){
-    Route::get('/patients', 'patient_list')->name('patient_list');
-    Route::get('/patients-consultes', 'patient_consultes')->name('patient_consultes');
-    Route::get('ajouter/', 'patient_add')->name('patient_add');
-    Route::get('recherche/', 'search')->name('search');
-});
 
-Route::controller(\App\Http\Controllers\ServiceController::class)
-    ->name('services.')
-    ->prefix('services/')
-    ->group(function(){
-       Route::get('{service}/liste/', 'index')->name('liste');
-       Route::get('{service}/edit/', 'edit')->name('edit');
-    });
+        Route::any("/logout", [
+            \App\Http\Controllers\AuthController::class,
+            "logout"
+        ])->name("logout");
+
+        Route::get('/', function () {
+            return view('base');
+        })->name('home');
+
+        Route::get('/test', function(){
+            return view('test');
+        });
+
+        Route::controller(\App\Http\Controllers\HomeController::class)
+            ->name('home.')
+            ->group(function(){
+                Route::get('/patients', 'patient_list')->name('patient_list');
+                Route::get('/patients-consultes', 'patient_consultes')->name('patient_consultes');
+                Route::get('ajouter/', 'patient_add')->name('patient_add');
+                Route::get('recherche/', 'search')->name('search');
+            });
+
+        Route::controller(\App\Http\Controllers\ServiceController::class)
+            ->name('services.')
+            ->prefix('services/')
+            ->group(function(){
+                Route::get('{service}/liste/', 'index')->name('liste');
+                Route::get('{service}/edit/', 'edit')->name('edit');
+            });
 
 
-Route::controller(\App\Http\Controllers\HospitalisationController::class)
-    ->name('hospi.')
-    ->prefix('hospitalisation/')
-    ->group(function(){
-        Route::get('/', 'index')->name('index');
-        Route::get('/chambre', 'chambre')->name('chambre');
-    });
+        Route::controller(\App\Http\Controllers\HospitalisationController::class)
+            ->name('hospi.')
+            ->prefix('hospitalisation/')
+            ->group(function(){
+                Route::get('/', 'index')->name('index');
+                Route::get('/chambre', 'chambre')->name('chambre');
+            });
 
-Route::controller(\App\Http\Controllers\AnalyseController::class)
-    ->name('analyse.')
-    ->prefix('analyse/')
-    ->group(function(){
-        Route::get('/', 'analyse_appointement_list')->name('analyse_appointement_list');
-        Route::get('liste/', 'analyse_list')->name('liste');
-        Route::get('demandes/', 'analyse_demandes')->name('demandes');
-        Route::get('terminees/', 'analyse_termines')->name('termines');
-    });
+        Route::controller(\App\Http\Controllers\AnalyseController::class)
+            ->name('analyse.')
+            ->prefix('analyse/')
+            ->group(function(){
+                Route::get('/', 'analyse_appointement_list')->name('analyse_appointement_list');
+                Route::get('liste/', 'analyse_list')->name('liste');
+                Route::get('demandes/', 'analyse_demandes')->name('demandes');
+                Route::get('terminees/', 'analyse_termines')->name('termines');
+            });
 
-Route::controller(\App\Http\Controllers\PharmacieController::class)
-    ->name('pharmacie.')
-    ->prefix('pharmacie/')
-    ->group(function(){
-       Route::get('ordonances/', 'list_ordonance')->name('list_ordonance');
-       Route::get('stock/', 'stock')->name('stock');
+        Route::controller(\App\Http\Controllers\PharmacieController::class)
+            ->name('pharmacie.')
+            ->prefix('pharmacie/')
+            ->group(function(){
+                Route::get('ordonances/', 'list_ordonance')->name('list_ordonance');
+                Route::get('stock/', 'stock')->name('stock');
+            });
+
     });
