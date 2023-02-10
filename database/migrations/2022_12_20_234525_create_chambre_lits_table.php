@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('chambre_lits', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-
+            $table->string('unite')->nullable();
             $table->string('type')->nullable();
             $table->string('nom')->nullable();
             $table->unsignedInteger('nbr_place')->nullable();

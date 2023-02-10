@@ -194,6 +194,10 @@ class ListPatient extends Component implements HasTable
                     ];
                 }),
 
+            Action::make('dossier')
+                ->url(fn($record)=> route('services.form', ['appointement'=>$record]))
+                ->button(),
+
             ActionGroup::make([
                 Action::make('Urgence')
                     ->label('Urgence')

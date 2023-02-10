@@ -8,6 +8,7 @@ use App\Models\Patient;
 use App\Models\Service;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Grid;
@@ -101,14 +102,25 @@ class AddPatient extends Component implements HasForms
                               'Femme'=>'Femme'
                           ])->inline()->required(),
 
-                          Select::make('situation_matrimoniale')
+                          Radio::make('situation_matrimoniale')
                               ->required()
+                              ->inline()
                               ->options(['Marie'=>'Marie','Celibataire'=>'Celibataire','Autres'=>'Autres']),
-                          DatePicker::make('date_naissance')->required()->label("Date de naissance"),
+                          TextInput::make('date_naissance')
+                              ->type('date')
+                              ->required()->label("Date de naissance"),
                           TextInput::make('lieu_naissance')->required()->label("Lieu de naissance"),
                           TextInput::make('email')->type('email'),
-                          TextInput::make('mobile')->tel()->prefix('+225'),
-                          TextInput::make('domicile')->placeholder('Ville, commune, quartier'),
+                          TextInput::make('mobile')->required()->tel()->prefix('+225'),
+
+
+                          Select::make('domicile')
+                              ->searchable()
+                              ->options([
+                                  'Abidjan-Adjame','Abidjan-Cocody','Abidjan-Koumassi','Abidjan-Marcory','Abidjan-Songon',
+                                  'Abidjan-Yopougon','Abidjan-Bingerville','Abidjan-Treichville','Autres',
+                              ]),
+
                           Select::make('profession')->options([
                               'Armée'=>'Armée',
                               'Medicale'=>'Medicale',
@@ -118,9 +130,11 @@ class AddPatient extends Component implements HasForms
                               'Privé'=>'Privé',
                           ])->label('Corps'),
 
-                          Select::make('nationalite')
-                              ->searchable()
-                              ->options(['IVOIRIEN','MALIEN','GHANEEN','AUTRES']),
+
+
+                          Radio::make('nationalite')
+                              ->inline()
+                              ->options(['IVOIRIENNE','AUTRES']),
 
                           Checkbox::make('scolarisation')->inline(false)
                       ])
@@ -133,12 +147,9 @@ class AddPatient extends Component implements HasForms
                       Repeater::make('motif_consultation')->schema([
                           TextInput::make('motif')
                       ]),
-                      Repeater::make('antecedant')->schema([
-                          Select::make('type_antecedant')->options(['Medicaux'=>'Medicaux','Churigicaux'=>'Churigicaux',
-                              'Vénérologie'=>'Vénérologie','Mode de vie'=>'Mode de vie',
-                              'Gyneco-obstétrique'=>'Gyneco-obstétrique','Autres'=>'Autres']),
-                          TextInput::make('motif')
-                      ])->columns(['default'=>2]),
+                      CheckboxList::make('type_antecedant')->options(['Medicaux'=>'Medicaux','Churigicaux'=>'Churigicaux',
+                          'Vénérologie'=>'Vénérologie','Mode de vie'=>'Mode de vie',
+                          'Gyneco-obstétrique'=>'Gyneco-obstétrique','Autres'=>'Autres']),
                   ]),
               Wizard\Step::make('Rendez-vous')
                   ->statePath('rdv')
@@ -147,7 +158,7 @@ class AddPatient extends Component implements HasForms
                       ->required()
                       ->options(Service::all('id','nom')->pluck('nom','id'))
                       ->searchable(),
-                  DateTimePicker::make('start')->label('Date du RDV')->default(now())
+                  TextInput::make('start')->type('date')->label('Date du RDV')->default(now())
               ]),
 
           ])->submitAction(new HtmlString('<button class="filament-button" type="submit">Enregistrer</button>'))

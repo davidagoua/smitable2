@@ -42,10 +42,14 @@ class ChambreList extends Component implements HasTable
                 })
                 ->form([
                     Grid::make(2)->schema([
+                        TextInput::make('unite')->required()->label('Unité'),
                         TextInput::make('nom')->required()->label('Numero de la chambre'),
+
+                        /*
                         Select::make('type')->required()->options([
                             'Chambre climatisée','Chambre spécialisée','Chambre Simple'
                         ])->label('Type de chambre'),
+                        */
                     ]),
                     Grid::make(3)->schema([
                         TextInput::make('stock')->required()->label('Nombre de chambre')->default(1),
@@ -59,12 +63,9 @@ class ChambreList extends Component implements HasTable
     public function getTableColumns()
     {
         return [
+          TextColumn::make('unite')->label('Unité'),
           TextColumn::make('nom')->label('Numero'),
-          BadgeColumn::make('Type')->getStateUsing(function($record){
-              return [
-                  'Chambre climatisée','Chambre spécialisée','Chambre Simple'
-              ][$record->type];
-          }),
+
             TextColumn::make('disponible')
                 ->label("Lits Disponibles")
                 ->getStateUsing(fn ($record) => $record->nbr_place - $record->hospitalisations()->count() .'/'. $record->nbr_place),

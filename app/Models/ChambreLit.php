@@ -13,7 +13,7 @@ class ChambreLit extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'nom','nbr_place','stock','type','prix',
+        'nom','nbr_place','stock','type','prix','unite'
     ];
 
     public function hospitalisations(): HasMany

@@ -49,6 +49,7 @@ Route::middleware('auth')
             ->group(function(){
                 Route::get('{service}/liste/', 'index')->name('liste');
                 Route::get('{service}/edit/', 'edit')->name('edit');
+                Route::get('service/dossier/{appointement}', 'service_form')->name('form');
             });
 
 
