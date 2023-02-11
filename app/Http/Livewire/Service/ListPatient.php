@@ -125,7 +125,7 @@ class ListPatient extends Component implements HasTable
             Action::make('Consulter')->button()
                 ->action(function ($record, $data) {
 
-                    if (count($data['analyses']) == 0 && !$data['hospitalisation']) {
+                    if (count($data['analyses']) == 0 ) {
                         $record->outed = now();
                     } else {
                         foreach ($data['analyses'] as $analyse) {
@@ -166,6 +166,7 @@ class ListPatient extends Component implements HasTable
                 ->form(function ($record) {
                     return [
                         RichEditor::make('description')->default(''),
+
                         Repeater::make('ordonances')->label('Ordonance')
                             ->schema([
                                 Select::make('id')
@@ -179,6 +180,7 @@ class ListPatient extends Component implements HasTable
                                     ->options(DB::table('analyses')->select('id', 'nom')->get()->pluck('nom', 'id'))
                                     ->label('Analyse'),
                             ])->columns(['default' => 2]),
+
                         Grid::make(4)
                             ->schema([
                                 Select::make('chambre_lit_id')

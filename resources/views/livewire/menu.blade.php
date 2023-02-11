@@ -55,13 +55,13 @@
                 <li class="menu-title"><b>Services</b></li>
 
                 @foreach($services as $service)
-                    <x-menu-link :link="route('services.liste', ['service'=>$service])" :label="$service->nom" :badge="$service->appointement_count"  :icon="$service->label"/>
+                    <x-menu-link :link="route('services.liste', ['service'=>$service])" :label="$service->nom" :badge="$service->appointement_count"  :icon="$service->label.' pr-1'"/>
                 @endforeach
 
                 <li class="menu-title"><b>Hospitalisation</b></li>
 
                 <x-menu-link :link="route('hospi.index')" label="Reservations" icon="icon-calender pr-1" />
-                <x-menu-link :link="route('hospi.chambre')" label="Chambres" />
+                <x-menu-link :link="route('hospi.chambre')" label="Unités" icon="icon-home pr-1" />
 
                 <li class="menu-title"><b>Analyse</b></li>
                 <x-menu-link :link="route('analyse.demandes')" label="Analyses demandées" icon="pr-1 icon-doc" />
