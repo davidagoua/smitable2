@@ -21,7 +21,9 @@ return new class extends Migration
 
                 ->nullable();
             $table->string('nom');
-            $table->longText('description');
+            $table->string('categorie')->nullable();
+            $table->string('unite')->nullable();
+            $table->longText('description')->nullable();
             $table->unsignedBigInteger('stock')->default(0);
             $table->unsignedBigInteger('prix')->default(0);
             $table->string('numero')->nullable();

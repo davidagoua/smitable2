@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Hospitalisation;
 
 use App\Models\Hospitalisation;
 use App\Models\HospitalisationState;
+use App\Models\Service;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
@@ -16,6 +17,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\SelectFilter;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -93,7 +95,11 @@ class Reservation extends Component implements HasTable
                 0 => 'En attente',
                 10 => 'En cours',
                 20 => 'Terminé',
-            ])
+            ]),
+            SelectFilter::make('service_id')
+                ->label("Service")
+                ->relationship('appointement', 'service_id')
+                ->options(Service::all()->pluck('nom','id'))
         ];
     }
 

@@ -14,6 +14,7 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Spatie\SimpleExcel\SimpleExcelReader;
 
@@ -71,12 +72,18 @@ class Stock extends Component implements HasTable
                             ->rules('required'),
                     ]),
                 ]),
-            Action::make('Exporter')->button()
+            Action::make('Importer')->button()
                 ->action(function($data){
-                    $rows = SimpleExcelReader::create(asset('/storage/'.$data['fichier']),'xlsx')->getRows();
+                    $rows = SimpleExcelReader::create(storage_path('app/public/'.$data['fichier']))->getRows();
 
-                    $rows->each(function(array $rowProperties) {
-                        dd($rowProperties);
+                    $rows->each(function(array $row) {
+                        DB::table('medicaments')->insert([
+                            'nom'=> $row['Désignation'],
+                            'numero'=>$row['CodeProduit'],
+                            'stock'=> $row['Total'],
+                            'categorie'=> $row['Categorie'],
+                            'unite'=> $row['Unité'],
+                        ]);
                     });
                 })
                 ->form([

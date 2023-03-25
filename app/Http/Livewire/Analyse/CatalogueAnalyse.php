@@ -7,6 +7,7 @@ use App\Models\AnalyseAppointement;
 use App\Models\Laboratoire;
 use Faker\Provider\Text;
 use Filament\Facades\Filament;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -16,6 +17,7 @@ use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Spatie\SimpleExcel\SimpleExcelReader;
 
@@ -37,12 +39,14 @@ class CatalogueAnalyse extends Component implements HasTable
     {
         return [
             Action::make('Importer')->button()
+                ->form([
+                    FileUpload::make('fichier')
+                ])
                 ->action(function($data){
 
-                    $rows = SimpleExcelReader::create(storage_path('analyses.xlsx'))->getRows();
-                    $rows->each(function(array $rowProperties) {
-                        // todo: load analyse from rowProperties
-                        dd($rowProperties);
+                    $rows = SimpleExcelReader::create(storage_path('app/public/'.$data['fichier']))->getRows();
+                    $rows->each(function(array $row) {
+
                     });
                 }),
             Action::make('ajouter')->button()

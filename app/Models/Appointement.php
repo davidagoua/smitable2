@@ -7,13 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Spatie\ModelStatus\HasStatuses;
 
 class Appointement extends Model
 {
-    use HasFactory;
+    use HasFactory, HasStatuses;
 
     protected $fillable = [
-        'patient_id','start','service_id','motifs'
+        'patient_id','start','service_id','motifs',
     ];
 
     protected $casts = [

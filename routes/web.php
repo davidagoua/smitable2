@@ -26,9 +26,7 @@ Route::middleware('auth')
             "logout"
         ])->name("logout");
 
-        Route::get('/', function () {
-            return view('base');
-        })->name('home');
+        Route::get('/', \App\Http\Livewire\HomePage::class)->name('home');
 
         Route::get('/test', function(){
             return view('test');
@@ -42,6 +40,15 @@ Route::middleware('auth')
                 Route::get('ajouter/', 'patient_add')->name('patient_add');
                 Route::get('recherche/', 'search')->name('search');
             });
+
+        Route::get('urgence/add-patient', [
+            \App\Http\Controllers\UrgenceController::class,
+            'form'
+        ])->name('urgence.patient_add');
+        Route::get('urgence/list-patient', [
+            \App\Http\Controllers\UrgenceController::class,
+            'liste'
+        ])->name('urgence.patient_list');
 
         Route::controller(\App\Http\Controllers\ServiceController::class)
             ->name('services.')

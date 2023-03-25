@@ -17,3 +17,10 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::controller(\App\Http\Controllers\Api\RoutineController::class)
+    ->prefix("/routine")
+    ->group(function(){
+        Route::post("/create_appointements", 'create_appointements');
+        Route::get("/liste_appointements", 'liste_appointements');
+    });

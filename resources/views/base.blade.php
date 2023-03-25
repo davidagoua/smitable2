@@ -22,10 +22,12 @@
 
     <link rel="stylesheet" href="style.css">
 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.3/flowbite.min.css"  rel="stylesheet" />
+
     <style>[x-cloak] { display: none !important; }</style>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
     @livewireScripts
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('scripts')
 
 </head>
