@@ -34,14 +34,13 @@ class RecherchePage extends Component implements HasTable
     protected function getTableColumns(): array
     {
         return [
-            TextColumn::make('code_patient')->label('Code Patient')->searchable(),
-            TextColumn::make('nom')->label('Nom')->searchable(),
-            TextColumn::make('prenoms')->label('Prenoms')->searchable(),
+            TextColumn::make('code_patient')->label('Code Patient')->searchable(isIndividual: true),
+            TextColumn::make('nom')->label('Nom')->searchable(isIndividual: true),
+            TextColumn::make('prenoms')->label('Prenoms')->searchable(isIndividual: true),
             TextColumn::make('sexe')->label('Sexe')
                 ->getStateUsing(function($record){
                     return $record->sexe == 'H' ? 'Masculin' : 'Féminin';
-                })
-                ->searchable(),
+                }),
         ];
     }
 

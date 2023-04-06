@@ -87,3 +87,5 @@ Route::middleware('auth')
             });
 
     });
+
+Route::view('/users', 'settings.user')->name('user-resource');

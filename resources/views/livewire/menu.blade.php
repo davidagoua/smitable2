@@ -99,6 +99,13 @@
                 </li>
                 <x-menu-link :link="route('pharmacie.list_ordonance')" label="Ordonances" icon="pr-1 icon-notebook" />
                 <x-menu-link :link="route('pharmacie.stock')" label="Stock Medicament" icon="pr-1 icon-layers" />
+
+                <li class="menu-title bg-gray-100 border-2 border-green">
+                    <i class="fas fa-prescription-bottle-medical pr-3"></i>
+                    <b>Paramètres</b>
+                </li>
+                <x-menu-link :link="route('user-resource')" label="Utilisateurs" icon="pr-1 icon-users" />
+
             </ul>
 
         </div>
