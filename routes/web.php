@@ -89,3 +89,4 @@ Route::middleware('auth')
     });
 
 Route::view('/users', 'settings.user')->name('user-resource');
+Route::view('/services', 'settings.services')->name('service-resource');

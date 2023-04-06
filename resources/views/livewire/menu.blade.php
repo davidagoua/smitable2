@@ -105,6 +105,7 @@
                     <b>Paramètres</b>
                 </li>
                 <x-menu-link :link="route('user-resource')" label="Utilisateurs" icon="pr-1 icon-users" />
+                <x-menu-link :link="route('service-resource')" label="Services" icon="pr-1 icon-box" />
 
             </ul>
 
